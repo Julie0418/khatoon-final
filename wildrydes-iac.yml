@@ -277,6 +277,8 @@ Resources:
         Location: !Sub "https://github.com/${GitHubOwner}/${GitHubRepoName}.git"
         GitCloneDepth: 1
         BuildSpec: "buildspec.yml" # Reference the buildspec.yml file in your repository
+      Artifacts:
+        Type: CODEPIPELINE # Required for integration with CodePipeline
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
