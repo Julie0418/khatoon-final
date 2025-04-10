@@ -6,55 +6,29 @@ Description: >
   and a CI/CD pipeline using CodeBuild, CodeDeploy, and CodePipeline.
   
 Parameters:
-  VpcCIDR:
-    Description: "VPC CIDR block"
-    Type: String
-    Default: 10.0.0.0/16
-  PublicSubnet1CIDR:
-    Description: "CIDR for public subnet 1"
-    Type: String
-    Default: 10.0.1.0/24
-  PublicSubnet2CIDR:
-    Description: "CIDR for public subnet 2"
-    Type: String
-    Default: 10.0.2.0/24
-  ContainerPort:
-    Description: "Port on which the container listens"
-    Type: Number
-    Default: 80
-  ImageRepositoryName:
-    Description: "Name for the ECR repository"
+  ECRRepositoryName:
+    Description: Name of the existing ECR repository
     Type: String
     Default: wildrydes-app
+
   GitHubOwner:
     Description: "GitHub repository owner"
     Type: String
     Default: Julie0418
+
   GitHubRepoName:
     Description: "GitHub repository name"
     Type: String
     Default: khatoon-final
+
   GitHubBranch:
     Description: "Branch for CodePipeline"
     Type: String
     Default: main
-  GitHubOAuthToken:
-    Description: "GitHub OAuth token (store securely)"
+    
+  CodeStarConnectionArn:
     Type: String
-    NoEcho: true
-  CodeBuildServiceRoleARN:
-    Description: "ARN for the IAM Role that CodeBuild will use"
-    Type: String
-    Default: arn:aws:iam::557690603426:role/service-role/codebuild-khatoon-flask-app-service-role
-  CodeDeployServiceRoleARN:
-    Description: "ARN for the IAM Role that CodeDeploy will use"
-    Type: String
-    Default: arn:aws:iam::557690603426:role/CodeDeployServiceRoleARN
-  CodePipelineServiceRoleARN:
-    Description: "ARN for the IAM Role that CodePipeline will use"
-    Type: String
-    Default: arn:aws:iam::557690603426:role/service-role/AWSCodePipelineServiceRole-ca-central-1-khatoon-codepipeline
-
+    Description: ARN of the CodeStar Connection to GitHub
 
 Resources:
 
@@ -205,7 +179,7 @@ Resources:
   ECRRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Ref ImageRepositoryName
+      RepositoryName: !Sub "${AWS::StackName}-${AWS::AccountId}-wildrydes-app"
 
   ## ECS Cluster and Task Definition (Fargate)
   ECSCluster:
