@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Default: Julie0418
 
-  GitHubRepoName:
+  GitHubRepo:
     Description: "GitHub repository name"
     Type: String
     Default: khatoon-final
