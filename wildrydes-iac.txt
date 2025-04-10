@@ -323,7 +323,7 @@ Resources:
   CodePipelineArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${AWS::StackName}-codepipeline-artifacts"
+      BucketName: !Sub "${AWS::StackName}-${AWS::AccountId}-codepipeline-artifacts"
 
   ## CodePipeline for full CI/CD workflow
   CodePipeline:

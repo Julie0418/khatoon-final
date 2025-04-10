@@ -205,7 +205,7 @@ Resources:
   ECRRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Ref ImageRepositoryName
+      RepositoryName: !Sub "${AWS::StackName}-${AWS::AccountId}-wildrydes-app"
 
   ## ECS Cluster and Task Definition (Fargate)
   ECSCluster:
