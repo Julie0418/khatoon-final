@@ -239,7 +239,7 @@ Resources:
       Memory: "512"
       ContainerDefinitions:
         - Name: wildrydes-container
-          Image: !Join ["", [!Ref ECRRepository, ":latest"]]
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ImageRepositoryName}:latest"
           PortMappings:
             - ContainerPort: !Ref ContainerPort
           Essential: true
@@ -273,10 +273,9 @@ Resources:
       Name: WildRydes-CodeBuild
       Description: "Build project for dockerized Wild Rydes application"
       Source:
-        Type: GITHUB
-        Location: !Sub "https://github.com/${GitHubOwner}/${GitHubRepoName}.git"
-        GitCloneDepth: 1
-        BuildSpec: "buildspec.yml" # Reference the buildspec.yml file in your repository
+        Type: CODEPIPELINE # Required for integration with CodePipeline
+      Artifacts:
+        Type: CODEPIPELINE # Required for integration with CodePipeline
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
