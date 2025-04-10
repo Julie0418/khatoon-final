@@ -239,7 +239,7 @@ Resources:
       Memory: "512"
       ContainerDefinitions:
         - Name: wildrydes-container
-          Image: !Join ["", [!Ref ECRRepository, ":latest"]]
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ImageRepositoryName}:latest"
           PortMappings:
             - ContainerPort: !Ref ContainerPort
           Essential: true
