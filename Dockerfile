@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Install required packages
-RUN pip install --no-cache-dir flask flask-cors
+RUN pip install --no-cache-dir flask 
 
 # Expose port 80
 EXPOSE 80

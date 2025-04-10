@@ -9,7 +9,7 @@ Parameters:
   ECRRepositoryName:
     Description: Name of the existing ECR repository
     Type: String
-    Default: wildrydes-app
+    Default: devops-ecr
 
   GitHubOwner:
     Description: "GitHub repository owner"
@@ -41,14 +41,14 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: Yourname-VPC
+          Value: khatoon-VPC
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: Yourname-IGW
+          Value: khatoon-IGW
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -64,7 +64,7 @@ Resources:
       AvailabilityZone: !Select [0, !GetAZs '']
       Tags:
         - Key: Name
-          Value: Yourname-PublicSubnet1
+          Value: khatoon-PublicSubnet1
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -74,7 +74,7 @@ Resources:
       AvailabilityZone: !Select [1, !GetAZs '']
       Tags:
         - Key: Name
-          Value: Yourname-PublicSubnet2
+          Value: khatoon-PublicSubnet2
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -84,7 +84,7 @@ Resources:
       AvailabilityZone: !Select [0, !GetAZs '']
       Tags:
         - Key: Name
-          Value: Yourname-PrivateSubnet1
+          Value: khatoon-PrivateSubnet1
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -94,7 +94,7 @@ Resources:
       AvailabilityZone: !Select [1, !GetAZs '']
       Tags:
         - Key: Name
-          Value: Yourname-PrivateSubnet2
+          Value: khatoon-PrivateSubnet2
 
   # Public Route Table for Public Subnets
   PublicRouteTable:
@@ -103,7 +103,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Yourname-PublicRouteTable
+          Value: khatoon-PublicRouteTable
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -138,7 +138,7 @@ Resources:
       SubnetId: !Ref PublicSubnet1
       Tags:
         - Key: Name
-          Value: Yourname-NATGateway
+          Value: khatoon-NATGateway
 
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
@@ -146,7 +146,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Yourname-PrivateRouteTable
+          Value: khatoon-PrivateRouteTable
 
   PrivateRoute:
     Type: AWS::EC2::Route
@@ -171,18 +171,18 @@ Resources:
   CodePipelineArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub Yourname-codepipeline-artifacts-${AWS::AccountId}-${AWS::Region}
+      BucketName: !Sub khatoon-codepipeline-artifacts-${AWS::AccountId}-${AWS::Region}
       VersioningConfiguration:
         Status: Enabled
       Tags:
         - Key: Name
-          Value: Yourname-CodePipelineArtifacts
+          Value: khatoon-CodePipelineArtifacts
 
   # Application Load Balancer
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Yourname-ALB Security Group
+      GroupDescription: khatoon-ALB Security Group
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -200,7 +200,7 @@ Resources:
         - !Ref ALBSecurityGroup
       Tags:
         - Key: Name
-          Value: Yourname-ALB
+          Value: khatoon-ALB
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -226,12 +226,12 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: Yourname-ECSCluster
+      ClusterName: khatoon-ECSCluster
 
   ECSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Yourname-ECS Security Group
+      GroupDescription: khatoon-ECS Security Group
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -260,7 +260,7 @@ Resources:
   ECSTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: Yourname-task
+      Family: khatoon-task
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -268,7 +268,7 @@ Resources:
       Memory: '512'
       ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
-        - Name: maheep-app
+        - Name: khatoon-app
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ECRRepositoryName}:latest
           PortMappings:
             - ContainerPort: 80
@@ -279,7 +279,7 @@ Resources:
     DependsOn: ALBListener
     Properties:
       Cluster: !Ref ECSCluster
-      ServiceName: Yourname-ECSService
+      ServiceName: khatoon-ECSService
       TaskDefinition: !Ref ECSTaskDefinition
       DesiredCount: 2
       LaunchType: FARGATE
@@ -292,7 +292,7 @@ Resources:
             - !Ref ECSSecurityGroup
       LoadBalancers:
         - TargetGroupArn: !Ref ALBTargetGroup
-          ContainerName: Yourname-app
+          ContainerName: khatoon-app
           ContainerPort: 80
 
   # Auto Scaling for ECS Service
@@ -308,7 +308,7 @@ Resources:
   ECSAutoScalingPolicy:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName: Yourname-ECSScalingPolicy
+      PolicyName: khatoon-ECSScalingPolicy
       PolicyType: TargetTrackingScaling
       ScalingTargetId: !Ref ECSAutoScalingTarget
       TargetTrackingScalingPolicyConfiguration:
@@ -350,7 +350,7 @@ Resources:
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: Yourname-CodeBuild
+      Name: khatoon-CodeBuild
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Artifacts:
         Type: CODEPIPELINE
